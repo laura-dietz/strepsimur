@@ -75,6 +75,40 @@
           <goals>assembly:single</goals>
         </configuration>
       </plugin>
+
+
+        <plugin>
+            <groupId>org.scala-tools</groupId>
+            <artifactId>maven-scala-plugin</artifactId>
+            <version>2.15.2</version>
+            <executions>
+                <execution>
+                    <id>compile</id>
+                    <goals>
+                        <!--  <goal>add-source</goal> -->
+                        <goal>compile</goal>
+                    </goals>
+                </execution>
+                <execution>
+                    <id>scala-test-compile</id>
+                    <phase>process-test-resources</phase>
+                    <goals>
+                        <goal>testCompile</goal>
+                    </goals>
+                </execution>
+            </executions>
+            <configuration>
+                <args>
+                    <arg>-target:jvm-1.5</arg>
+                </args>
+                <jvmArgs>
+                    <jvmArg>-Xms64m</jvmArg>
+                    <jvmArg>-Xmx2g</jvmArg>
+                </jvmArgs>
+            </configuration>
+        </plugin>
+
+
     </plugins>
   </build>
 

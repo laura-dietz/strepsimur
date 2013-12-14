@@ -39,7 +39,7 @@ object TestGalago {
 
     val resultWithDocs = galago.fetchDocuments(result)
     for(FetchedScoredDocument(scoredDoc, doc) <- resultWithDocs) {
-      println(scoredDoc.rank +": "+ scoredDoc.documentName+"\n"+doc.text)
+      println(scoredDoc.rank + ": " + scoredDoc.documentName + "\n" + doc.text.split(" "))
     }
 
   }

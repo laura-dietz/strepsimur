@@ -2,6 +2,7 @@ package edu.umass.ciir.strepsimur.galago
 
 import org.lemurproject.galago.core.retrieval.{ScoredPassage, ScoredDocument}
 import org.lemurproject.galago.core.retrieval.prf.{RelevanceModel1, WeightedTerm, RelevanceModel3}
+import org.lemurproject.galago.core.tokenize.Tokenizer
 
 // todo merge conflict
 //import edu.umass.ciir.sentopic.rm.RelevanceModelExpander
@@ -47,15 +48,22 @@ class GalagoRetrieval(val galagoParams:Parameters) {
 
 
   def fakeTokenize(text: String): Document = {
-    val tagTokenizer = new TagTokenizer(new FakeParameters(galagoParams))
-    tagTokenizer.tokenize(text)
+    //    val tagTokenizer = new TagTokenizer(new FakeParameters(galagoParams))
+    //    tagTokenizer.tokenize(text)
+    val tokenizer = Tokenizer.instance(galagoParams)
+    tokenizer.tokenize(text)
   }
 
   def fakeRetokenize(doc:Document) {
-    val tagTokenizer = new TagTokenizer(new FakeParameters(galagoParams))
-    val fakeDoc = tagTokenizer.tokenize(doc.text)
-    doc.termCharBegin = fakeDoc.termCharBegin
-    doc.termCharEnd = fakeDoc.termCharEnd
+    val tokenizer = Tokenizer.instance(galagoParams)
+    tokenizer.tokenize(doc)
+    //
+    //
+    //    val tagTokenizer = new TagTokenizer(new FakeParameters(galagoParams))
+    //    val fakeDoc = tagTokenizer.tokenize(doc.text)
+    //    doc.termCharBegin = fakeDoc.termCharBegin
+    //    doc.termCharEnd = fakeDoc.termCharEnd
+    //    doc.terms = fakeDoc.terms
   }
 
 

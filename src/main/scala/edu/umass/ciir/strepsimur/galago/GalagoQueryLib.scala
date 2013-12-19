@@ -33,6 +33,22 @@ object GalagoQueryLib {
     else ""
   }
 
+  def buildBigramForString(string: String): String = {
+    val filteredString = normalize(string).filterNot(StopWordList.isStopWord(_))
+    if (filteredString.size > 1) {
+      "#combine(" + filteredString.sliding(2).map(ngram => "#ordered:1(" + ngram(0) + " " + ngram(1) + ") ").mkString(" ") + ")"
+    }
+    else ""
+  }
+
+  def buildWindowedBigramForString(string: String): String = {
+    val filteredString = normalize(string).filterNot(StopWordList.isStopWord(_))
+    if (filteredString.size > 1) {
+      "#combine(" + filteredString.sliding(2).map(ngram => "#unordered:8(" + ngram(0) + " " + ngram(1) + ") ").mkString(" ") + ")"
+    }
+    else ""
+  }
+
   def buildTermQueryForString(string: String): String = {
     val filteredString = normalize(string).filterNot(StopWordList.isStopWord(_))
     if (filteredString.size > 0) filteredString.mkString(" ")
@@ -42,7 +58,7 @@ object GalagoQueryLib {
 
   def buildOrderedWindowQueryForCounting(string: String, windowSize: Int = 1, filterStopwords: Boolean = true,
                                          replaceStopWithWildcard: Boolean = false
-                                        ): String = {
+                                          ): String = {
     def buildOrdered(filteredString: Seq[String], windowSize: Int): String = {
       if (filteredString.size > 0) {
         "#ordered:" + windowSize + "(" + filteredString.mkString(" ") + ")"
@@ -80,8 +96,8 @@ object GalagoQueryLib {
   def buildWeightedCombine(weightedQueryStrs: Seq[(String, Double)]): String = {
     val filteredWeightedQueryStrs =
       renormalize(weightedQueryStrs.filter({
-                                             case (subquery, weight) => subquery.length > 0 && weight > 0.0
-                                           }))
+        case (subquery, weight) => subquery.length > 0 && weight > 0.0
+      }))
 
 
     val weightsStr =
@@ -151,7 +167,7 @@ object GalagoQueryLib {
 
   def paramPassageRetrieval(p: Parameters, workingSet: List[String], defaultPassageSize: Int = 50,
                             defaultPassageShift: Int = 25
-                           ): Parameters = {
+                             ): Parameters = {
     p.set("passageQuery", true)
     p.set("passageSize", defaultPassageSize)
     p.set("passageShift", defaultPassageShift)
@@ -175,7 +191,6 @@ object GalagoQueryLib {
   def cleanString(queryTerm: String): String = {
     queryTerm.replaceAllLiterally("-", " ").replaceAll("[^a-zA-Z0-9]", "")
   }
-
 
 
 }

@@ -21,7 +21,7 @@ class GalagoRetrieval(val galagoParams:Parameters) {
 
   def retrieveDocs(query:ParametrizedQuery, numResults:Int):Seq[ScoredDocument] = {
     def debug(x: org.lemurproject.galago.core.retrieval.query.Node, y:org.lemurproject.galago.core.retrieval.query.Node){
-      println(y.toPrettyString)
+      println(x.toPrettyString)
     }
     searcher.retrieveScoredDocuments(query.queryStr, Some(query.parameters), numResults)
   }

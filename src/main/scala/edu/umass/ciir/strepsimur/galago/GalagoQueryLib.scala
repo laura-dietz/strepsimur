@@ -179,7 +179,12 @@ object GalagoQueryLib {
   // ======== Helpers ===========================
 
   def normalize(query: String): Seq[String] = {
-    query.replace("-", " ").split("\\s+").map(cleanString(_).toLowerCase).filter(_.length() > 1)
+    val useTokenNormalization = System.getProperty("token.normalize", "true").toBoolean
+    if (useTokenNormalization) {
+      query.replace("-", " ").split("\\s+").map(cleanString(_).toLowerCase).filter(_.length() > 1)
+    } else {
+      query.split("\\s+")
+    }
   }
 
   /**

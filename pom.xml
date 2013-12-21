@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>edu.umass.ciir</groupId>
     <artifactId>strepsimur</artifactId>
-    <version>s2.10.2-g3.5-1.0-SNAPSHOT</version>
+    <version>s2.10.2-g3.5-1.0.1-SNAPSHOT</version>
     <inceptionYear>2013</inceptionYear>
     <properties>
         <scala.version>2.10.2</scala.version>
@@ -58,6 +58,15 @@
 
 
     <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-deploy-plugin</artifactId>
+                    <version>2.8.1</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
         <plugins>
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -87,6 +96,12 @@
                 <configuration>
                     <goals>assembly:single</goals>
                 </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <version>2.8.1</version>
             </plugin>
 
             <plugin>
@@ -139,7 +154,7 @@
     </build>
     <distributionManagement>
         <repository>
-            <id>deployment</id>
+            <id>edu.umass.ciir.releases</id>
             <name>Internal Releases</name>
             <url>http://scm-ciir.cs.umass.edu:8080/nexus/content/repositories/releases/</url>
         </repository>

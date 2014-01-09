@@ -3,12 +3,12 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>edu.umass.ciir</groupId>
     <artifactId>strepsimur</artifactId>
-    <version>s2.10.2-g3.5-1.0.1-SNAPSHOT</version>
+    <version>s2.10.2-g3.5.1-1.0.1-SNAPSHOT</version>
     <inceptionYear>2013</inceptionYear>
     <properties>
         <scala.version>2.10.2</scala.version>
         <lemur.ware>org.lemurproject.galago</lemur.ware>
-        <lemur.version>3.5</lemur.version>
+        <lemur.version>3.5.1</lemur.version>
         <javaVersion>1.6</javaVersion>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>

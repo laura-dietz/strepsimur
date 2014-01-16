@@ -14,7 +14,7 @@ object GalagoQueryLib {
   // ============== build raw query strings =============
 
   def buildSeqDepForString(string: String, fields: Seq[(String, Double)] = Seq.empty): String = {
-    val filteredString = normalize(string).filterNot(StopWordList.isStopWord(_))
+    val filteredString = normalize(string).filterNot(StopWordList.isStopWord)
     if (filteredString.size > 0) {
       if (fields.isEmpty) {
         "#sdm(" + filteredString.mkString(" ") + ")"
@@ -34,7 +34,7 @@ object GalagoQueryLib {
   }
 
   def buildBigramForString(string: String): String = {
-    val filteredString = normalize(string).filterNot(StopWordList.isStopWord(_))
+    val filteredString = normalize(string).filterNot(StopWordList.isStopWord)
     if (filteredString.size > 1) {
       "#combine(" + filteredString.sliding(2).map(ngram => "#ordered:1(" + ngram(0) + " " + ngram(1) + ") ").mkString(" ") + ")"
     }
@@ -42,7 +42,7 @@ object GalagoQueryLib {
   }
 
   def buildWindowedBigramForString(string: String): String = {
-    val filteredString = normalize(string).filterNot(StopWordList.isStopWord(_))
+    val filteredString = normalize(string).filterNot(StopWordList.isStopWord)
     if (filteredString.size > 1) {
       "#combine(" + filteredString.sliding(2).map(ngram => "#unordered:8(" + ngram(0) + " " + ngram(1) + ") ").mkString(" ") + ")"
     }
@@ -50,7 +50,7 @@ object GalagoQueryLib {
   }
 
   def buildTermQueryForString(string: String): String = {
-    val filteredString = normalize(string).filterNot(StopWordList.isStopWord(_))
+    val filteredString = normalize(string).filterNot(StopWordList.isStopWord)
     if (filteredString.size > 0) filteredString.mkString(" ")
     else ""
 
@@ -68,9 +68,9 @@ object GalagoQueryLib {
 
 
     if (filterStopwords) {
-      buildOrdered(normalize(string).filterNot(StopWordList.isStopWord(_)), windowSize)
+      buildOrdered(normalize(string).filterNot(StopWordList.isStopWord), windowSize)
     } else if (replaceStopWithWildcard) {
-      val (stops, terms) = normalize(string).partition(StopWordList.isStopWord(_))
+      val (stops, terms) = normalize(string).partition(StopWordList.isStopWord)
       buildOrdered(terms, windowSize + stops.size)
 
     } else {
@@ -122,7 +122,7 @@ object GalagoQueryLib {
   }
 
   private def buildMultiTermQuery(phrases: Seq[String]): String = {
-    "#combine(  " + phrases.flatMap(normalize(_).filterNot(StopWordList.isStopWord(_))).mkString(" ") + ")"
+    "#combine(  " + phrases.flatMap(normalize(_).filterNot(StopWordList.isStopWord)).mkString(" ") + ")"
   }
 
 
@@ -195,6 +195,10 @@ object GalagoQueryLib {
    */
   def cleanString(queryTerm: String): String = {
     queryTerm.replaceAllLiterally("-", " ").replaceAll("[^a-zA-Z0-9]", "")
+  }
+
+  def escapeTerm(term: String): String = {
+    "@\"" + term + "\""
   }
 
 

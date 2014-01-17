@@ -11,7 +11,7 @@ import GalagoQueryBuilder.SeqDep
  * Time: 3:38 PM
  */
 object TestGalago {
-  def main(args:Array[String]) {
+  def main(args: Array[String]) {
     println("Plain sequential dependence model")
     seqDep()
     println("\n\n\n\n")
@@ -25,20 +25,21 @@ object TestGalago {
   }
 
   val searchSentenceJson = Parameters.parseFile("params/aristo-search-sentence.json")
-  val searchSentencePassageJson= Parameters.parseFile("params/aristo-search-sentence-passage.json")
-  
+  val searchSentencePassageJson = Parameters.parseFile("params/aristo-search-sentence-passage.json")
+
   def seqDep() {
     val galago = new GalagoSearcher(searchSentenceJson)
 
     val paramQuery = GalagoQueryBuilder.seqdep("when does the economy collapse?", Some(SeqDep(0.5, 0.4, 0.1)))
-    val result = galago.retrieveScoredDocuments(resultCount= 20, query = paramQuery.queryStr, params = Some(paramQuery.parameters))
+    val result = galago.retrieveScoredDocuments(resultCount = 20, query = paramQuery.queryStr,
+      params = Some(paramQuery.parameters))
 
-    for(scoredDoc <- result) {
-      println(scoredDoc.rank +": "+ scoredDoc.documentName)
+    for (scoredDoc <- result) {
+      println(scoredDoc.rank + ": " + scoredDoc.documentName)
     }
 
     val resultWithDocs = galago.fetchDocuments(result)
-    for(FetchedScoredDocument(scoredDoc, doc) <- resultWithDocs) {
+    for (FetchedScoredDocument(scoredDoc, doc) <- resultWithDocs) {
       println(scoredDoc.rank + ": " + scoredDoc.documentName + "\n" + doc.text.split(" "))
     }
 
@@ -53,18 +54,20 @@ object TestGalago {
       "burst of the housing bubble" -> 0.2
     )
     val paramQuery = GalagoQueryBuilder.weightedMultiSeqdep(weightedQuestions, Some(SeqDep(0.5, 0.4, 0.1)))
-    val result = galago.retrieveScoredDocuments(resultCount= 20, query = paramQuery.queryStr, params = Some(paramQuery.parameters))
+    val result = galago.retrieveScoredDocuments(resultCount = 20, query = paramQuery.queryStr,
+      params = Some(paramQuery.parameters))
 
-    for(scoredDoc <- result) {
-      println(scoredDoc.rank +": "+ scoredDoc.documentName)
+    for (scoredDoc <- result) {
+      println(scoredDoc.rank + ": " + scoredDoc.documentName)
     }
 
     val resultWithDocs = galago.fetchDocuments(result)
-    for(FetchedScoredDocument(scoredDoc, doc) <- resultWithDocs) {
-      println(scoredDoc.rank +": "+ scoredDoc.documentName+"\n"+doc.text)
+    for (FetchedScoredDocument(scoredDoc, doc) <- resultWithDocs) {
+      println(scoredDoc.rank + ": " + scoredDoc.documentName + "\n" + doc.text)
     }
 
   }
+
   def passageMultiSeqDep() {
     val galago = new GalagoSearcher(searchSentenceJson)
     val galagoPassage = new GalagoSearcher(searchSentencePassageJson)
@@ -75,24 +78,28 @@ object TestGalago {
       "Burst of the Housing Bubble" -> 0.2
     )
 
-    def queryDebugger(root:Node, transformed:Node) {
-      println("Running Query \n"+root)
+    def queryDebugger(root: Node, transformed: Node) {
+      println("Running Query \n" + root)
     }
 
     val paramQuery1 = GalagoQueryBuilder.weightedMultiSeqdep(weightedQuestions, Some(SeqDep(0.5, 0.4, 0.1)))
-    val result1 = galago.retrieveScoredDocuments(resultCount= 20, query = paramQuery1.queryStr, params = Some(paramQuery1.parameters), debugQuery = queryDebugger)
+    val result1 = galago.retrieveScoredDocuments(resultCount = 20, query = paramQuery1.queryStr,
+      params = Some(paramQuery1.parameters), debugQuery = queryDebugger)
 
     val paramQuery = GalagoQueryBuilder.passageRetrieval(paramQuery1, result1.map(_.documentName).toList, 50, 25)
-    val result = galagoPassage.retrieveScoredPassages(resultCount= 20, query = paramQuery.queryStr, params = Some(paramQuery.parameters))
+    val result = galagoPassage.retrieveScoredPassages(resultCount = 20, query = paramQuery.queryStr,
+      params = Some(paramQuery.parameters))
 
-    for(scoredPassage <- result) {
-      println(scoredPassage.rank +": "+ scoredPassage.documentName+" ("+scoredPassage.begin+" - "+scoredPassage.end+")")
+    for (scoredPassage <- result) {
+      println(
+        scoredPassage.rank + ": " + scoredPassage.documentName + " (" + scoredPassage.begin + " - " + scoredPassage.end + ")")
     }
 
     val resultWithDocs = galago.fetchPassages(result)
-    for(FetchedScoredPassage(scoredPassage, doc) <- resultWithDocs) {
-      val passageText = doc.terms.slice(scoredPassage.begin,scoredPassage.end).mkString(" ")
-      println(scoredPassage.rank +": "+ scoredPassage.documentName+" ("+scoredPassage.begin+" - "+scoredPassage.end+")\n"+passageText)
+    for (FetchedScoredPassage(scoredPassage, doc) <- resultWithDocs) {
+      val passageText = doc.terms.slice(scoredPassage.begin, scoredPassage.end).mkString(" ")
+      println(
+        scoredPassage.rank + ": " + scoredPassage.documentName + " (" + scoredPassage.begin + " - " + scoredPassage.end + ")\n" + passageText)
     }
 
   }

@@ -25,7 +25,10 @@ object GalagoQueryBuilder {
     ParametrizedQuery("#rm ( " + origQuery.queryStr + ")", params)
   }
 
-  def seqdep(query: String, seqdepParams: Option[SeqDep] = None, mu: Option[Double] = None, fields: Seq[(String, Double)] = Seq.empty): ParametrizedQuery = {
+  def seqdep(query: String,
+             seqdepParams: Option[SeqDep] = None,
+             mu: Option[Double] = None,
+             fields: Seq[(String, Double)] = Seq.empty): ParametrizedQuery = {
     val param = new Parameters()
     GalagoQueryLib.noFlat(param)
     if (seqdepParams.isDefined) GalagoQueryLib.paramSeqDep(param, seqdepParams.get.asTuple)
@@ -33,7 +36,9 @@ object GalagoQueryBuilder {
     ParametrizedQuery(GalagoQueryLib.buildSeqDepForString(query, fields), param)
   }
 
-  def weightedMultiSeqdep(weightedqueries: Seq[(String, Double)], seqdepParams: Option[SeqDep] = None, mu: Option[Double] = None): ParametrizedQuery = {
+  def weightedMultiSeqdep(weightedqueries: Seq[(String, Double)],
+                          seqdepParams: Option[SeqDep] = None,
+                          mu: Option[Double] = None): ParametrizedQuery = {
     val param = new Parameters()
     GalagoQueryLib.noFlat(param)
     if (seqdepParams.isDefined) GalagoQueryLib.paramSeqDep(param, seqdepParams.get.asTuple)
@@ -74,7 +79,12 @@ object GalagoQueryBuilder {
     ParametrizedQuery(rawQuery, param)
   }
 
-  def passageRetrieval(initialQuery: ParametrizedQuery, workingSet: List[String], passageSize: Int, passageShift: Int, seqdepParams: Option[SeqDep] = None, mu: Option[Double] = None): ParametrizedQuery = {
+  def passageRetrieval(initialQuery: ParametrizedQuery,
+                       workingSet: List[String],
+                       passageSize: Int,
+                       passageShift: Int,
+                       seqdepParams: Option[SeqDep] = None,
+                       mu: Option[Double] = None): ParametrizedQuery = {
     val param = new Parameters()
     GalagoParamTools.myParamCopyFrom(param, initialQuery.parameters)
     GalagoQueryLib.noFlat(param)
@@ -84,7 +94,12 @@ object GalagoQueryBuilder {
     ParametrizedQuery(initialQuery.queryStr, param)
   }
 
-  def seqdepPassage(question: String, workingSet: List[String], passageSize: Int, passageShift: Int, seqdepParams: Option[SeqDep] = None, mu: Option[Double] = None): ParametrizedQuery = {
+  def seqdepPassage(question: String,
+                    workingSet: List[String],
+                    passageSize: Int,
+                    passageShift: Int,
+                    seqdepParams: Option[SeqDep] = None,
+                    mu: Option[Double] = None): ParametrizedQuery = {
     val param = new Parameters()
     GalagoQueryLib.noFlat(param)
     if (seqdepParams.isDefined) GalagoQueryLib.paramSeqDep(param, seqdepParams.get.asTuple)
@@ -93,7 +108,9 @@ object GalagoQueryBuilder {
     ParametrizedQuery(GalagoQueryLib.buildSeqDepForString(question), param)
   }
 
-  def expandQuery(origQuery: ParametrizedQuery, expansionTerms: Seq[(String, Double)], origWeight: Double): ParametrizedQuery = {
+  def expandQuery(origQuery: ParametrizedQuery,
+                  expansionTerms: Seq[(String, Double)],
+                  origWeight: Double): ParametrizedQuery = {
     val queryStr =
       GalagoQueryLib.buildWeightedCombine(Seq(
         origQuery.queryStr -> origWeight,

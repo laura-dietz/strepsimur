@@ -192,14 +192,21 @@ class GalagoSearcher(globalParameters: Parameters) {
   //  }
 
 
-  def retrieveAnnotatedScoredDocuments(query: String, params: Parameters, resultCount: Int, debugQuery: ((Node, Node) => Unit) = ((x, y) => {})): Seq[(ScoredDocument, AnnotatedNode)] = {
+  def retrieveAnnotatedScoredDocuments(query: String,
+                                       params: Parameters,
+                                       resultCount: Int,
+                                       debugQuery: ((Node, Node) => Unit) = ((x,
+                                                                              y) => {})): Seq[(ScoredDocument, AnnotatedNode)] = {
     params.set("annotate", true)
     for (scoredAnnotatedDoc <- retrieveScoredDocuments(query, Some(params), resultCount, debugQuery)) yield {
       (scoredAnnotatedDoc, scoredAnnotatedDoc.annotation)
     }
   }
 
-  def retrieveScoredDocuments(query: String, params: Option[Parameters] = None, resultCount: Int, debugQuery: ((Node, Node) => Unit) = ((x, y) => {})): Seq[ScoredDocument] = {
+  def retrieveScoredDocuments(query: String,
+                              params: Option[Parameters] = None,
+                              resultCount: Int,
+                              debugQuery: ((Node, Node) => Unit) = ((x, y) => {})): Seq[ScoredDocument] = {
     val p = new Parameters()
     myParamCopyFrom(p, globalParameters)
     params match {
@@ -220,7 +227,10 @@ class GalagoSearcher(globalParameters: Parameters) {
     }
   }
 
-  def retrieveScoredPassages(query: String, params: Option[Parameters], resultCount: Int, debugQuery: ((Node, Node) => Unit) = ((x, y) => {})): Seq[ScoredPassage] = {
+  def retrieveScoredPassages(query: String,
+                             params: Option[Parameters],
+                             resultCount: Int,
+                             debugQuery: ((Node, Node) => Unit) = ((x, y) => {})): Seq[ScoredPassage] = {
     retrieveScoredDocuments(query, params, resultCount, debugQuery).map(_.asInstanceOf[ScoredPassage])
   }
 

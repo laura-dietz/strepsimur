@@ -36,7 +36,8 @@ object GalagoQueryLib {
   def buildBigramForString(string: String): String = {
     val filteredString = normalize(string).filterNot(StopWordList.isStopWord)
     if (filteredString.size > 1) {
-      "#combine(" + filteredString.sliding(2).map(ngram => "#ordered:1(" + ngram(0) + " " + ngram(1) + ") ").mkString(" ") + ")"
+      "#combine(" + filteredString.sliding(2).map(ngram => "#ordered:1(" + ngram(0) + " " + ngram(1) + ") ").mkString(
+        " ") + ")"
     }
     else ""
   }
@@ -44,7 +45,8 @@ object GalagoQueryLib {
   def buildWindowedBigramForString(string: String): String = {
     val filteredString = normalize(string).filterNot(StopWordList.isStopWord)
     if (filteredString.size > 1) {
-      "#combine(" + filteredString.sliding(2).map(ngram => "#unordered:8(" + ngram(0) + " " + ngram(1) + ") ").mkString(" ") + ")"
+      "#combine(" + filteredString.sliding(2).map(ngram => "#unordered:8(" + ngram(0) + " " + ngram(1) + ") ").mkString(
+        " ") + ")"
     }
     else ""
   }

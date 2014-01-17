@@ -175,6 +175,11 @@ object GalagoQueryLib {
     p
   }
 
+  def noFlat(p: Parameters) {
+    p.set("norm", false)
+    p
+  }
+
 
   // ======== Helpers ===========================
 

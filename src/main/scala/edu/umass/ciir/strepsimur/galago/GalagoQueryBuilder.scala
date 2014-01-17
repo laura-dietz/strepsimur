@@ -27,6 +27,7 @@ object GalagoQueryBuilder {
 
   def seqdep(query: String, seqdepParams: Option[SeqDep] = None, mu: Option[Double] = None, fields: Seq[(String, Double)] = Seq.empty): ParametrizedQuery = {
     val param = new Parameters()
+    GalagoQueryLib.noFlat(param)
     if (seqdepParams.isDefined) GalagoQueryLib.paramSeqDep(param, seqdepParams.get.asTuple)
     if (mu.isDefined) GalagoQueryLib.paramSmoothingMu(param, mu.get)
     ParametrizedQuery(GalagoQueryLib.buildSeqDepForString(query, fields), param)
@@ -34,6 +35,7 @@ object GalagoQueryBuilder {
 
   def weightedMultiSeqdep(weightedqueries: Seq[(String, Double)], seqdepParams: Option[SeqDep] = None, mu: Option[Double] = None): ParametrizedQuery = {
     val param = new Parameters()
+    GalagoQueryLib.noFlat(param)
     if (seqdepParams.isDefined) GalagoQueryLib.paramSeqDep(param, seqdepParams.get.asTuple)
     if (mu.isDefined) GalagoQueryLib.paramSmoothingMu(param, mu.get)
     val weightedSeqDeps =
@@ -44,6 +46,7 @@ object GalagoQueryBuilder {
 
   def unigram(weightedqueries: Seq[(String, Double)], mu: Option[Double] = None): ParametrizedQuery = {
     val param = new Parameters()
+    GalagoQueryLib.noFlat(param)
     if (mu.isDefined) GalagoQueryLib.paramSmoothingMu(param, mu.get)
     val weightedBigrams =
       for ((query, weight) <- weightedqueries) yield (GalagoQueryLib.buildTermQueryForString(query), weight)
@@ -53,6 +56,7 @@ object GalagoQueryBuilder {
 
   def bigram(weightedqueries: Seq[(String, Double)], mu: Option[Double] = None): ParametrizedQuery = {
     val param = new Parameters()
+    GalagoQueryLib.noFlat(param)
     if (mu.isDefined) GalagoQueryLib.paramSmoothingMu(param, mu.get)
     val weightedBigrams =
       for ((query, weight) <- weightedqueries) yield (GalagoQueryLib.buildBigramForString(query), weight)
@@ -62,6 +66,7 @@ object GalagoQueryBuilder {
 
   def windowedBigram(weightedqueries: Seq[(String, Double)], mu: Option[Double] = None): ParametrizedQuery = {
     val param = new Parameters()
+    GalagoQueryLib.noFlat(param)
     if (mu.isDefined) GalagoQueryLib.paramSmoothingMu(param, mu.get)
     val weightedBigrams =
       for ((query, weight) <- weightedqueries) yield (GalagoQueryLib.buildWindowedBigramForString(query), weight)
@@ -72,6 +77,7 @@ object GalagoQueryBuilder {
   def passageRetrieval(initialQuery: ParametrizedQuery, workingSet: List[String], passageSize: Int, passageShift: Int, seqdepParams: Option[SeqDep] = None, mu: Option[Double] = None): ParametrizedQuery = {
     val param = new Parameters()
     GalagoParamTools.myParamCopyFrom(param, initialQuery.parameters)
+    GalagoQueryLib.noFlat(param)
     if (seqdepParams.isDefined) GalagoQueryLib.paramSeqDep(param, seqdepParams.get.asTuple)
     if (mu.isDefined) GalagoQueryLib.paramSmoothingMu(param, mu.get)
     GalagoQueryLib.paramPassageRetrieval(param, workingSet, passageSize, passageShift)
@@ -80,6 +86,7 @@ object GalagoQueryBuilder {
 
   def seqdepPassage(question: String, workingSet: List[String], passageSize: Int, passageShift: Int, seqdepParams: Option[SeqDep] = None, mu: Option[Double] = None): ParametrizedQuery = {
     val param = new Parameters()
+    GalagoQueryLib.noFlat(param)
     if (seqdepParams.isDefined) GalagoQueryLib.paramSeqDep(param, seqdepParams.get.asTuple)
     if (mu.isDefined) GalagoQueryLib.paramSmoothingMu(param, mu.get)
     GalagoQueryLib.paramPassageRetrieval(param, workingSet, passageSize, passageShift)

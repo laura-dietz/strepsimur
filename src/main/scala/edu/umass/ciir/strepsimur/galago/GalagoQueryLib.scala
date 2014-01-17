@@ -175,7 +175,7 @@ object GalagoQueryLib {
     p
   }
 
-  def noFlat(p: Parameters) {
+  def noFlat(p: Parameters): Parameters = {
     p.set("norm", false)
     p
   }

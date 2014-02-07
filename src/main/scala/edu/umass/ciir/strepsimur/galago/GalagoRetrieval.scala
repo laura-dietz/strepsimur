@@ -17,9 +17,11 @@ class GalagoRetrieval(val galagoParams: Parameters) {
   def retrieveDocs(query: ParametrizedQuery, numResults: Int): Seq[ScoredDocument] = {
    def debug(x: org.lemurproject.galago.core.retrieval.query.Node,
               y: org.lemurproject.galago.core.retrieval.query.Node) {
-      println("run query: "+y.toPrettyString)
-    }
-    searcher.retrieveScoredDocuments(query.queryStr, Some(query.parameters), numResults, debug)
+     println("run query x: " + x.toPrettyString)
+     println("run query y: " + y.toPrettyString)
+   }
+    searcher.retrieveScoredDocuments(query.queryStr, Some(query.parameters), numResults)
+    //    searcher.retrieveScoredDocuments(query.queryStr, Some(query.parameters), numResults, debug)
   }
 
   def retrievePassages(query: ParametrizedQuery, numResults: Int = 100): Seq[ScoredPassage] = {

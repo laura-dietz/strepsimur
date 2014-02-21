@@ -3,12 +3,12 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>edu.umass.ciir</groupId>
     <artifactId>strepsimur</artifactId>
-    <version>s2.10.2-g3.5.1-1.0.1-SNAPSHOT</version>
+    <version>s2.10.2-g3.5.2-1.0.1-SNAPSHOT</version>
     <inceptionYear>2013</inceptionYear>
     <properties>
         <scala.version>2.10.2</scala.version>
         <lemur.ware>org.lemurproject.galago</lemur.ware>
-        <lemur.version>3.5.1</lemur.version>
+        <lemur.version>3.5.2</lemur.version>
         <javaVersion>1.6</javaVersion>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
@@ -88,6 +88,16 @@
                     <source>${javaVersion}</source>
                     <target>${javaVersion}</target>
                 </configuration>
+                <executions>
+                    <execution>
+                        <id>compile</id>
+                        <goals>
+                          <goal>add-source</goal>
+                          <goal>compile</goal>
+                          <goal>testCompile</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
 
             <plugin>
@@ -103,52 +113,6 @@
                 <artifactId>maven-deploy-plugin</artifactId>
                 <version>2.8.1</version>
             </plugin>
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-source-plugin</artifactId>
-                <version>2.1.2</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>jar-no-fork</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-
-
-            <plugin>
-                <groupId>org.scala-tools</groupId>
-                <artifactId>maven-scala-plugin</artifactId>
-                <version>2.15.2</version>
-                <executions>
-                    <execution>
-                        <id>compile</id>
-                        <goals>
-                            <!--  <goal>add-source</goal> -->
-                            <goal>compile</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>scala-test-compile</id>
-                        <phase>process-test-resources</phase>
-                        <goals>
-                            <goal>testCompile</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <args>
-                        <arg>-target:jvm-1.5</arg>
-                    </args>
-                    <jvmArgs>
-                        <jvmArg>-Xms64m</jvmArg>
-                        <jvmArg>-Xmx2g</jvmArg>
-                    </jvmArgs>
-                </configuration>
-            </plugin>
-
 
         </plugins>
     </build>

@@ -3,7 +3,7 @@ package edu.umass.ciir.strepsimur
 import org.lemurproject.galago.core.btree.simple.DiskMapReader
 import scala.collection.JavaConversions._
 import java.nio.charset.Charset
-import scala.collection.mutable
+import scala.collection.{immutable, mutable}
 import java.nio.ByteBuffer
 
 
@@ -50,8 +50,24 @@ object DiskBacking {
     DiskMapReader.fromMap(filename, inputMap)
   }
 
+  def createDiskBackingImm[Key, Value](string2stringMap: immutable.Map[Key, Value], filename: String,
+                                       key2Bytes: (Key) => Array[Byte],
+                                       value2Bytes: (Value) => Array[Byte]) {
+    val inputMap = string2stringMap.map(entry => (key2Bytes(entry._1), value2Bytes(entry._2)))
+    DiskMapReader.fromMap(filename, inputMap)
+  }
+
   def createStringStringDiskBacking(map:mutable.Map[String,String], filename:String)= {
     createDiskBacking[String,String](
+      map,
+      filename,
+      key2Bytes = DiskBackerConv.string2byte,
+      value2Bytes = DiskBackerConv.string2byte
+    )
+  }
+
+  def createStringStringDiskBackingImm(map: immutable.Map[String, String], filename: String) = {
+    createDiskBackingImm[String, String](
       map,
       filename,
       key2Bytes = DiskBackerConv.string2byte,

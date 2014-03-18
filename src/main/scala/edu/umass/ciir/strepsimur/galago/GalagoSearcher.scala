@@ -71,6 +71,10 @@ class GalagoSearcher(globalParameters: Parameters) {
     documentCache.get(Pair(documentName, params))
   }
 
+  def pullDocumentWithTokens(documentName: String): Document = {
+    getUnderlyingRetrieval().getDocument(documentName, new Document.DocumentComponents(false, false, true))
+  }
+
   def pullDocument(documentName: String, params: Parameters = new Parameters()): Document = {
     val p = new Parameters()
     myParamCopyFrom(p, globalParameters)

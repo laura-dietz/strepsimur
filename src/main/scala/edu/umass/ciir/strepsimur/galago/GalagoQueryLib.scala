@@ -173,7 +173,7 @@ object GalagoQueryLib {
   def paramRM(p: Parameters, fbOrigWt: Double, fbDocs: Int, fbTerms: Int): Parameters = {
     p.set("fbOrigWt", fbOrigWt)
     p.set("fbDocs", fbDocs)
-    p.set("fbTerms", fbTerms)
+    p.set("fbTerm", fbTerms)
     p
   }
 

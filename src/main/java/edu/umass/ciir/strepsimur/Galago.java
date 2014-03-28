@@ -1,4 +1,4 @@
-package edu.umass.ciir.hack;
+package edu.umass.ciir.strepsimur;
 
 import org.lemurproject.galago.core.tools.App;
 

@@ -6,11 +6,12 @@
     <properties>
         <scala.version>2.10.2</scala.version>
         <lemur.ware>org.lemurproject.galago</lemur.ware>
-        <lemur.version>3.6-SNAPSHOT</lemur.version>
+        <lemur.version>3.5</lemur.version>
         <javaVersion>1.6</javaVersion>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <strepsi.version>1.2</strepsi.version>
     </properties>
-    <version>s${scala.version}-g${lemur.version}-1.0.1-SNAPSHOT</version>
+    <version>s${scala.version}-g${lemur.version}-${strepsi.version}</version>
     <inceptionYear>2013</inceptionYear>
 
     <repositories>
@@ -50,7 +51,7 @@
         <dependency>
             <groupId>edu.umass.ciir</groupId>
             <artifactId>strepsitools</artifactId>
-            <version>s${scala.version}-1.0.1-SNAPSHOT</version>
+            <version>s${scala.version}-${strepsi.version}</version>
         </dependency>
 
 

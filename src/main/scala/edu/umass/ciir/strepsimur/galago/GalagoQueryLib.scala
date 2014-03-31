@@ -192,6 +192,18 @@ object GalagoQueryLib {
     p
   }
 
+  def paramPassageExtentRetrieval(p: Parameters, workingSet: List[String], defaultPassageSize: Int = 50,
+                                  defaultPassageShift: Int = 25, extentName:String
+                                   ): Parameters = {
+    p.set("extentQuery", true)
+    p.set("extent", extentName)
+    p.set("extentCount", defaultPassageSize)
+    p.set("extentShift", defaultPassageShift)
+    paramWorkingSet(p, workingSet)
+    p
+  }
+
+
   def noFlat(p: Parameters): Parameters = {
     p.set("norm", false)
     p

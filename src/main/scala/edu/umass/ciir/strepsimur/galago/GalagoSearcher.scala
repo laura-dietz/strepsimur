@@ -6,11 +6,16 @@ import org.lemurproject.galago.tupleflow.Parameters
 import org.lemurproject.galago.core.parse.Document
 
 import scala.collection.JavaConversions._
-import org.lemurproject.galago.core.retrieval.{Retrieval, RetrievalFactory, ScoredPassage, ScoredDocument}
+import org.lemurproject.galago.core.retrieval._
 import org.lemurproject.galago.core.index.stats.NodeStatistics
 import org.lemurproject.galago.core.parse.Document.DocumentComponents
 import com.google.common.cache.{CacheLoader, CacheBuilder, LoadingCache}
 import java.util.concurrent.TimeUnit
+import edu.umass.ciir.strepsimur.galago.FetchedScoredDocument
+import scala.Some
+import edu.umass.ciir.strepsimur.galago.FetchedScoredPassage
+import org.lemurproject.galago.core.index.Index
+import org.lemurproject.galago.core.index.disk.DiskIndex
 
 object GalagoSearcher {
   def apply(p: Parameters): GalagoSearcher = {
@@ -75,12 +80,13 @@ class GalagoSearcher(globalParameters: Parameters) {
     getUnderlyingRetrieval().getDocument(documentName, new Document.DocumentComponents(false, false, true))
   }
 
+
   def pullDocument(documentName: String, params: Parameters = new Parameters()): Document = {
     val p = new Parameters()
     myParamCopyFrom(p, globalParameters)
     myParamCopyFrom(p, params)
     getDocuments_(Seq(documentName), p).values.headOption.getOrElse({
-      throw new RuntimeException("Could not pull document with name "+documentName)
+      throw new edu.umass.ciir.strepsimur.galago.DocumentPullException(documentName)
     })
   }
 

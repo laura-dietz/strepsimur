@@ -79,7 +79,9 @@ class GalagoSearcher(globalParameters: Parameters) {
     val p = new Parameters()
     myParamCopyFrom(p, globalParameters)
     myParamCopyFrom(p, params)
-    getDocuments_(Seq(documentName), p).values.head
+    getDocuments_(Seq(documentName), p).values.headOption.getOrElse({
+      throw new RuntimeException("Could not pull document with name "+documentName)
+    })
   }
 
   def getDocuments(documentNames: Seq[String], params: Parameters = new Parameters()): Map[String, Document] = {

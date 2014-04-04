@@ -77,7 +77,11 @@ class GalagoSearcher(globalParameters: Parameters) {
   }
 
   def pullDocumentWithTokens(documentName: String): Document = {
-    getUnderlyingRetrieval().getDocument(documentName, new Document.DocumentComponents(false, false, true))
+    getUnderlyingRetrieval().getDocument(documentName, new Document.DocumentComponents(true, false, true))
+  }
+
+  def pullDocumentWithTokensAndMeta(documentName: String): Document = {
+    getUnderlyingRetrieval().getDocument(documentName, new Document.DocumentComponents(true, true, true))
   }
 
 

@@ -5,6 +5,8 @@ import org.lemurproject.galago.core.tokenize.Tokenizer
 
 import org.lemurproject.galago.core.parse.Document
 import org.lemurproject.galago.tupleflow.Parameters
+import scala.collection.JavaConversions._
+
 
 /**
  * User: dietz
@@ -39,6 +41,9 @@ class GalagoRetrieval(val galagoParams: Parameters) {
     tokenizer.tokenize(doc)
   }
 
+  def retrievePassageTerms(docname: String, beginToken: Int, endToken: Int): Seq[String] = {
+    searcher.pullDocumentWithTokens(docname).terms.subList(beginToken, endToken)
+  }
 
   def retrievePassageDocs(query: ParametrizedQuery, numResults: Int = 100): Seq[FetchedScoredPassage] = {
     val results = searcher.retrieveScoredPassages(query.queryStr, Some(query.parameters), numResults)

@@ -11,11 +11,7 @@ import org.lemurproject.galago.core.index.stats.NodeStatistics
 import org.lemurproject.galago.core.parse.Document.DocumentComponents
 import com.google.common.cache.{CacheLoader, CacheBuilder, LoadingCache}
 import java.util.concurrent.TimeUnit
-import edu.umass.ciir.strepsimur.galago.FetchedScoredDocument
 import scala.Some
-import edu.umass.ciir.strepsimur.galago.FetchedScoredPassage
-import org.lemurproject.galago.core.index.Index
-import org.lemurproject.galago.core.index.disk.DiskIndex
 
 object GalagoSearcher {
   def apply(p: Parameters): GalagoSearcher = {

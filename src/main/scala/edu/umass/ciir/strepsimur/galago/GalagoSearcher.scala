@@ -207,8 +207,8 @@ class GalagoSearcher(globalParameters: Parameters) {
   def retrieveAnnotatedScoredDocuments(query: String,
                                        params: Parameters,
                                        resultCount: Int,
-                                       debugQuery: ((Node, Node) => Unit) = ((x,
-                                                                              y) => {})): Seq[(ScoredDocument, AnnotatedNode)] = {
+                                       debugQuery: ((Node, Node) => Unit) = ((x, y) => {})): Seq[(ScoredDocument,
+    AnnotatedNode)] = {
     params.set("annotate", true)
     for (scoredAnnotatedDoc <- retrieveScoredDocuments(query, Some(params), resultCount, debugQuery)) yield {
       (scoredAnnotatedDoc, scoredAnnotatedDoc.annotation)
@@ -231,7 +231,15 @@ class GalagoSearcher(globalParameters: Parameters) {
     val root = StructuredQuery.parse(query)
     val transformed = m_searcher.transformQuery(root, p)
     debugQuery(root, transformed)
-    val results = m_searcher.executeQuery(transformed, p).scoredDocuments
+    val results =
+      try {
+        m_searcher.executeQuery(transformed, p).scoredDocuments
+      } catch {
+        case ex: IndexOutOfBoundsException => {
+          System.err.println("Warning: empty result set caused IndexOutOfBoundsException (see Galago bug #233)")
+          new java.util.ArrayList[ScoredDocument]()
+        }
+      }
     if (results != null) {
       results
     } else {

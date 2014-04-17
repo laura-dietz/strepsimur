@@ -22,8 +22,13 @@ class GalagoRetrieval(val galagoParams: Parameters) {
      println("run query x: " + x.toPrettyString)
      println("run query y: " + y.toPrettyString)
    }
-    searcher.retrieveScoredDocuments(query.queryStr, Some(query.parameters), numResults)
-    //    searcher.retrieveScoredDocuments(query.queryStr, Some(query.parameters), numResults, debug)
+    if (query.queryStr.trim.length == 0) {
+      System.err.println("Document retrieval: Running empty query, returning empty result set")
+      Seq.empty
+    } else {
+      searcher.retrieveScoredDocuments(query.queryStr, Some(query.parameters), numResults)
+      //    searcher.retrieveScoredDocuments(query.queryStr, Some(query.parameters), numResults, debug)
+    }
   }
 
   def retrievePassages(query: ParametrizedQuery, numResults: Int = 100): Seq[ScoredPassage] = {
@@ -46,13 +51,18 @@ class GalagoRetrieval(val galagoParams: Parameters) {
   }
 
   def retrievePassageDocs(query: ParametrizedQuery, numResults: Int = 100): Seq[FetchedScoredPassage] = {
-    val results = searcher.retrieveScoredPassages(query.queryStr, Some(query.parameters), numResults)
-    val fetched = searcher.fetchPassages(results)
-    for (FetchedScoredPassage(_, doc) <- fetched) {
-      if (doc.termCharBegin == null || doc.termCharBegin.size() == 0) {
-        fakeRetokenize(doc)
+    if (query.queryStr.trim.length == 0) {
+      System.err.println("Passage retrieval: Running empty query, returning empty result set")
+      Seq.empty
+    } else {
+      val results = searcher.retrieveScoredPassages(query.queryStr, Some(query.parameters), numResults)
+      val fetched = searcher.fetchPassages(results)
+      for (FetchedScoredPassage(_, doc) <- fetched) {
+        if (doc.termCharBegin == null || doc.termCharBegin.size() == 0) {
+          fakeRetokenize(doc)
+        }
       }
+      fetched
     }
-    fetched
   }
 }

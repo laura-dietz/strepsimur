@@ -219,31 +219,37 @@ class GalagoSearcher(globalParameters: Parameters) {
                               params: Option[Parameters] = None,
                               resultCount: Int,
                               debugQuery: ((Node, Node) => Unit) = ((x, y) => {})): Seq[ScoredDocument] = {
-    val p = new Parameters()
-    myParamCopyFrom(p, globalParameters)
-    params match {
-      case Some(params) => myParamCopyFrom(p, params)
-      case None => {}
-    }
-    p.set("startAt", 0)
-    p.set("resultCount", resultCount)
-    p.set("requested", resultCount)
-    val root = StructuredQuery.parse(query)
-    val transformed = m_searcher.transformQuery(root, p)
-    debugQuery(root, transformed)
-    val results =
-      try {
-        m_searcher.executeQuery(transformed, p).scoredDocuments
-      } catch {
-        case ex: IndexOutOfBoundsException => {
-          System.err.println("Warning: empty result set caused IndexOutOfBoundsException (see Galago bug #233)")
-          new java.util.ArrayList[ScoredDocument]()
-        }
-      }
-    if (results != null) {
-      results
+    if (params.isDefined && params.get.containsKey("working") && params.get.getAsList("working").isEmpty) {
+      System.err.println("Running query with empty working set, returning empty result set")
+      Seq.empty
     } else {
-      Seq()
+
+      val p = new Parameters()
+      myParamCopyFrom(p, globalParameters)
+      params match {
+        case Some(params) => myParamCopyFrom(p, params)
+        case None => {}
+      }
+      p.set("startAt", 0)
+      p.set("resultCount", resultCount)
+      p.set("requested", resultCount)
+      val root = StructuredQuery.parse(query)
+      val transformed = m_searcher.transformQuery(root, p)
+      debugQuery(root, transformed)
+      val results =
+        try {
+          m_searcher.executeQuery(transformed, p).scoredDocuments
+        } catch {
+          case ex: IndexOutOfBoundsException => {
+            System.err.println("Warning: empty result set caused IndexOutOfBoundsException (see Galago bug #233)")
+            new java.util.ArrayList[ScoredDocument]()
+          }
+        }
+      if (results != null) {
+        results
+      } else {
+        Seq.empty
+      }
     }
   }
 

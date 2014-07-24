@@ -131,7 +131,11 @@ trait LongLongValueBacking[Key] extends DiskBacking[Key, (Long,Long)] {
 class String2StringDiskBacking(val path:String)
   extends DiskBacking[String,String]
   with StringKeyBacking[String]
-  with StringValueBacking[String]{}
+  with StringValueBacking[String]{
+  def getString(key:java.lang.String):java.lang.String = {
+    this(key).asInstanceOf[java.lang.String]
+  }
+}
 
 class String2LongDiskBacking(val path:String)
   extends DiskBacking[String,Long]

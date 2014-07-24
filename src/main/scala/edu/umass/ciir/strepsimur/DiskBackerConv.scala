@@ -133,7 +133,11 @@ class String2StringDiskBacking(val path:String)
   with StringKeyBacking[String]
   with StringValueBacking[String]{
   def getString(key:java.lang.String):java.lang.String = {
-    this(key).asInstanceOf[java.lang.String]
+    try {
+      this(key).asInstanceOf[java.lang.String]
+    } catch {
+      case ex: NullPointerException => null
+    }
   }
 }
 

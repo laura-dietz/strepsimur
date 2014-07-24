@@ -110,6 +110,12 @@ object GalagoQueryLib {
     "#combine(  " + phrases.map(buildSeqDepForString(_)).mkString(" ") + ")"
   }
 
+  def buildBooleanQuery(queryStr: String): String = {
+    if (queryStr.length == 0) throw new IllegalArgumentException("#require #all cannot be applied to an empty query. " +
+      "QueryStr = " + queryStr)
+    "#all( " + queryStr + " )"
+  }
+
   def buildWeightedCombine(weightedQueryStrs: Seq[(String, Double)]): String = {
     val filteredWeightedQueryStrs =
       renormalize(weightedQueryStrs.filter({
@@ -206,6 +212,11 @@ object GalagoQueryLib {
 
   def noFlat(p: Parameters): Parameters = {
     p.set("norm", false)
+    p
+  }
+
+  def noDeltaReady(p: Parameters): Parameters = {
+    p.set("deltaReady", false)
     p
   }
 

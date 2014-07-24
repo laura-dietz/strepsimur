@@ -11,11 +11,7 @@ import org.lemurproject.galago.core.index.stats.NodeStatistics
 import org.lemurproject.galago.core.parse.Document.DocumentComponents
 import com.google.common.cache.{CacheLoader, CacheBuilder, LoadingCache}
 import java.util.concurrent.TimeUnit
-import edu.umass.ciir.strepsimur.galago.FetchedScoredDocument
 import scala.Some
-import edu.umass.ciir.strepsimur.galago.FetchedScoredPassage
-import org.lemurproject.galago.core.index.Index
-import org.lemurproject.galago.core.index.disk.DiskIndex
 
 object GalagoSearcher {
   def apply(p: Parameters): GalagoSearcher = {
@@ -211,8 +207,8 @@ class GalagoSearcher(globalParameters: Parameters) {
   def retrieveAnnotatedScoredDocuments(query: String,
                                        params: Parameters,
                                        resultCount: Int,
-                                       debugQuery: ((Node, Node) => Unit) = ((x,
-                                                                              y) => {})): Seq[(ScoredDocument, AnnotatedNode)] = {
+                                       debugQuery: ((Node, Node) => Unit) = ((x, y) => {})): Seq[(ScoredDocument,
+    AnnotatedNode)] = {
     params.set("annotate", true)
     for (scoredAnnotatedDoc <- retrieveScoredDocuments(query, Some(params), resultCount, debugQuery)) yield {
       (scoredAnnotatedDoc, scoredAnnotatedDoc.annotation)
@@ -223,23 +219,37 @@ class GalagoSearcher(globalParameters: Parameters) {
                               params: Option[Parameters] = None,
                               resultCount: Int,
                               debugQuery: ((Node, Node) => Unit) = ((x, y) => {})): Seq[ScoredDocument] = {
-    val p = new Parameters()
-    myParamCopyFrom(p, globalParameters)
-    params match {
-      case Some(params) => myParamCopyFrom(p, params)
-      case None => {}
-    }
-    p.set("startAt", 0)
-    p.set("resultCount", resultCount)
-    p.set("requested", resultCount)
-    val root = StructuredQuery.parse(query)
-    val transformed = m_searcher.transformQuery(root, p)
-    debugQuery(root, transformed)
-    val results = m_searcher.executeQuery(transformed, p).scoredDocuments
-    if (results != null) {
-      results
+    if (params.isDefined && params.get.containsKey("working") && params.get.getAsList("working").isEmpty) {
+      System.err.println("Running query with empty working set, returning empty result set")
+      Seq.empty
     } else {
-      Seq()
+
+      val p = new Parameters()
+      myParamCopyFrom(p, globalParameters)
+      params match {
+        case Some(params) => myParamCopyFrom(p, params)
+        case None => {}
+      }
+      p.set("startAt", 0)
+      p.set("resultCount", resultCount)
+      p.set("requested", resultCount)
+      val root = StructuredQuery.parse(query)
+      val transformed = m_searcher.transformQuery(root, p)
+      debugQuery(root, transformed)
+      val results =
+        try {
+          m_searcher.executeQuery(transformed, p).scoredDocuments
+        } catch {
+          case ex: IndexOutOfBoundsException => {
+            System.err.println("Warning: empty result set caused IndexOutOfBoundsException (see Galago bug #233)")
+            new java.util.ArrayList[ScoredDocument]()
+          }
+        }
+      if (results != null) {
+        results
+      } else {
+        Seq.empty
+      }
     }
   }
 

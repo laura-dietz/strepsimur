@@ -33,7 +33,7 @@ public class CorpusExport {
             throw new RuntimeException("No corpus file or directory found for index!");
         }
 
-        FileTools.makeNecessaryDirs(outputDir);
+        FileTools.makeNecessaryDirs(outputDir+File.separator+outputPrefix);
 
         DocumentReader dr = new CorpusReader(corpus.getAbsolutePath());
         DocumentReader.DocumentIterator iter = (DocumentReader.DocumentIterator) dr.getIterator();

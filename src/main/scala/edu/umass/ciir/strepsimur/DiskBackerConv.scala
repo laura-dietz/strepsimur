@@ -4,7 +4,7 @@ import org.lemurproject.galago.core.btree.simple.DiskMapReader
 import scala.collection.JavaConversions._
 import java.nio.charset.Charset
 import scala.collection.{immutable, mutable}
-import java.nio.ByteBuffer
+import java.nio.{FloatBuffer, ByteBuffer}
 
 
 /**
@@ -26,12 +26,23 @@ object DiskBackerConv {
     val bb = ByteBuffer.wrap(bytes)
     bb.getLong
   }
+
+  def int2byte(int:Int):Array[Byte] = {
+    Array(int.toByte)
+  }
+
+  def byte2int(bytes:Array[Byte]):Int = {
+    val bb = ByteBuffer.wrap(bytes)
+    bb.getInt
+  }
+
   def longlong2byte(long:(Long,Long)):Array[Byte] = {
     val bb =ByteBuffer.allocate(16)
     bb.putLong(long._1)
     bb.putLong(long._2)
     bb.array()
   }
+
 
   def byte2longlong(bytes:Array[Byte]):(Long,Long) = {
     val bb = ByteBuffer.wrap(bytes)
@@ -40,6 +51,9 @@ object DiskBackerConv {
     val long2 = x.get()
     (long1,long2)
   }
+
+
+
 }
 
 object DiskBacking {
@@ -83,6 +97,15 @@ object DiskBacking {
       value2Bytes = DiskBackerConv.longlong2byte
     )
   }
+  
+  def createStringIntDiskBacking(map:mutable.Map[String,Int], filename:String)= {
+    DiskBacking.createDiskBacking[String,Int](
+      map,
+      filename,
+      key2Bytes = DiskBackerConv.string2byte,
+      value2Bytes = DiskBackerConv.int2byte
+    )
+  }
 
 
 }
@@ -121,6 +144,10 @@ trait LongValueBacking[Key] extends DiskBacking[Key, Long] {
   def value2b(k: Long) = DiskBackerConv.long2byte(k)
   def b2value(bytes: Array[Byte]):Long = DiskBackerConv.byte2long(bytes)
 }
+trait IntValueBacking[Key] extends DiskBacking[Key, Int] {
+  def value2b(k: Int) = DiskBackerConv.int2byte(k)
+  def b2value(bytes: Array[Byte]):Int = DiskBackerConv.byte2int(bytes)
+}
 trait LongLongValueBacking[Key] extends DiskBacking[Key, (Long,Long)] {
   def value2b(k: (Long, Long)) = DiskBackerConv.longlong2byte(k)
   def b2value(bytes: Array[Byte]):(Long,Long) = DiskBackerConv.byte2longlong(bytes)
@@ -134,7 +161,20 @@ class String2StringDiskBacking(val path:String)
   with StringValueBacking[String]{
   def getString(key:java.lang.String):java.lang.String = {
     try {
-      this(key).asInstanceOf[java.lang.String]
+      this.apply(key).asInstanceOf[java.lang.String]
+    } catch {
+      case ex: NullPointerException => null
+    }
+  }
+}
+
+class String2IntDiskBacking(val path:String)
+  extends DiskBacking[String,Int]
+  with StringKeyBacking[Int]
+  with IntValueBacking[String]{
+  def getString(key:java.lang.String):java.lang.Integer = {
+    try {
+      this.apply(key).asInstanceOf[java.lang.Integer]
     } catch {
       case ex: NullPointerException => null
     }

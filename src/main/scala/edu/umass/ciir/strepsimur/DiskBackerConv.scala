@@ -3,7 +3,7 @@ package edu.umass.ciir.strepsimur
 import org.lemurproject.galago.core.btree.simple.DiskMapReader
 import scala.collection.JavaConversions._
 import java.nio.charset.Charset
-import scala.collection.{immutable, mutable}
+import scala.collection.{JavaConverters, JavaConversions, immutable, mutable}
 import java.nio.{FloatBuffer, ByteBuffer}
 
 
@@ -28,7 +28,10 @@ object DiskBackerConv {
   }
 
   def int2byte(int:Int):Array[Byte] = {
-    Array(int.toByte)
+    val bb =ByteBuffer.allocate(4)
+    bb.putInt(int)
+    bb.array()
+    //    Array(int.toByte)
   }
 
   def byte2int(bytes:Array[Byte]):Int = {
@@ -64,11 +67,20 @@ object DiskBacking {
     DiskMapReader.fromMap(filename, inputMap)
   }
 
+  def createDiskBackingIter[Key,Value](dataiter: Iterator[(Key, Value)], filename:String,
+                                   key2Bytes:(Key)=>Array[Byte],
+                                   value2Bytes:(Value)=>Array[Byte]){
+
+
+    val inputMap = dataiter.map(entry => (key2Bytes(entry._1), value2Bytes(entry._2))).toMap
+    DiskMapReader.fromMap(filename, inputMap)
+  }
+
   def createDiskBackingImm[Key, Value](string2stringMap: immutable.Map[Key, Value], filename: String,
                                        key2Bytes: (Key) => Array[Byte],
                                        value2Bytes: (Value) => Array[Byte]) {
     val inputMap = string2stringMap.map(entry => (key2Bytes(entry._1), value2Bytes(entry._2)))
-    DiskMapReader.fromMap(filename, inputMap)
+    DiskMapReader.fromMap(filename, mapAsJavaMap(inputMap))
   }
 
   def createStringStringDiskBacking(map:mutable.Map[String,String], filename:String)= {
@@ -98,9 +110,9 @@ object DiskBacking {
     )
   }
   
-  def createStringIntDiskBacking(map:mutable.Map[String,Int], filename:String)= {
-    DiskBacking.createDiskBacking[String,Int](
-      map,
+  def createStringIntDiskBacking(dataiter:Iterator[(String,Int)], filename:String)= {
+    DiskBacking.createDiskBackingIter[String,Int](
+      dataiter,
       filename,
       key2Bytes = DiskBackerConv.string2byte,
       value2Bytes = DiskBackerConv.int2byte

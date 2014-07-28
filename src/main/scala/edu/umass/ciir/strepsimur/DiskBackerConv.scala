@@ -57,10 +57,10 @@ object DiskBackerConv {
 }
 
 object DiskBacking {
-  def createDiskBacking[Key,Value](string2stringMap: mutable.Map[Key, Value], filename:String, 
+  def createDiskBacking[Key,Value](datamap: mutable.Map[Key, Value], filename:String,
                                    key2Bytes:(Key)=>Array[Byte],
                                    value2Bytes:(Value)=>Array[Byte]){
-    val inputMap = string2stringMap.map(entry => (key2Bytes(entry._1), value2Bytes(entry._2)))
+    val inputMap = datamap.map(entry => (key2Bytes(entry._1), value2Bytes(entry._2)))
     DiskMapReader.fromMap(filename, inputMap)
   }
 

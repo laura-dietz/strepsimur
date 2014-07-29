@@ -140,6 +140,25 @@ trait DiskBacking[Key,Value]{
   def keySet():Set[Key]={
     dmr.keySet().map(b2key).toSet
   }
+
+
+  def defaultValue:Option[Value]
+
+  def getOrDefault(key:Key):Value = {
+    try {
+        this.apply(key)
+      } catch {
+        case ex: NullPointerException => {
+          defaultValue match {
+            case Some(defaultVal) => {
+              defaultVal
+            }
+            case None => throw ex
+          }
+        }
+      }
+  }
+
 }
 
 
@@ -167,10 +186,11 @@ trait LongLongValueBacking[Key] extends DiskBacking[Key, (Long,Long)] {
 
 
 
-class String2StringDiskBacking(val path:String)
+class String2StringDiskBacking(val path:String, val defaultValue:Option[String] = None)
   extends DiskBacking[String,String]
   with StringKeyBacking[String]
   with StringValueBacking[String]{
+  def this(path: String) = this(path,None)
   def getString(key:java.lang.String):java.lang.String = {
     try {
       this.apply(key).asInstanceOf[java.lang.String]
@@ -180,10 +200,11 @@ class String2StringDiskBacking(val path:String)
   }
 }
 
-class String2IntDiskBacking(val path:String)
+class String2IntDiskBacking(val path:String, val defaultValue:Option[Int] = None)
   extends DiskBacking[String,Int]
   with StringKeyBacking[Int]
   with IntValueBacking[String]{
+  def this(path: String) = this(path,None)
   def getString(key:java.lang.String):java.lang.Integer = {
     try {
       this.apply(key).asInstanceOf[java.lang.Integer]
@@ -193,14 +214,18 @@ class String2IntDiskBacking(val path:String)
   }
 }
 
-class String2LongDiskBacking(val path:String)
+class String2LongDiskBacking(val path:String, val defaultValue:Option[Long] = None)
   extends DiskBacking[String,Long]
   with StringKeyBacking[Long]
-  with LongValueBacking[String]{}
+  with LongValueBacking[String]{
+    def this(path: String) = this(path,None)
+  }
 
-class String2LongLongDiskBacking(val path:String)
+class String2LongLongDiskBacking(val path:String, val defaultValue:Option[(Long,Long)] = None)
   extends DiskBacking[String,(Long,Long)]
   with StringKeyBacking[(Long,Long)]
-  with LongLongValueBacking[String]{}
+  with LongLongValueBacking[String]{
+  def this(path: String) = this(path,None)
+  }
 
 

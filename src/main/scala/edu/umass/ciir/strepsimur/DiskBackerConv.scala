@@ -125,6 +125,9 @@ object DiskBacking {
 trait DiskBacking[Key,Value]{
   val path:String
   val dmr = new DiskMapReader(path)
+  def close() {
+    dmr.close()
+  }
   def key2b(k:Key):Array[Byte]
   def value2b(k:Value):Array[Byte]
   def b2key(bytes:Array[Byte]):Key

@@ -44,7 +44,7 @@ object GalagoSearcher {
 }
 
 
-class GalagoSearcher(globalParameters: Parameters) {
+class GalagoSearcher(globalParameters: Parameters) extends DocumentPuller[Document] {
 
   import GalagoParamTools.myParamCopyFrom
 

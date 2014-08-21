@@ -9,8 +9,19 @@ import edu.umass.ciir.strepsimur.galago.GalagoSearcher
  * Time: 4:34 PM
  */
 class GalagoBackenedTermCounts(backgroundCollection:GalagoSearcher) {
-  def collectionLength:Long = backgroundCollection.getUnderlyingRetrieval().getIndexPartStatistics("postings")
-    .collectionLength
+
+  def collectionLength:Long = {
+    try {
+      backgroundCollection.getUnderlyingRetrieval().getIndexPartStatistics("postings")
+        .collectionLength
+    }
+    catch {
+      case e : java.lang.IllegalArgumentException => {
+        backgroundCollection.getUnderlyingRetrieval().getIndexPartStatistics("postings.krovetz")
+          .collectionLength
+      }
+    }
+  }
 
   def unigramCounts():TermCollectionCounts = {
     def fetchUnigram(term:String):(TermFreq, DocFreq) = {

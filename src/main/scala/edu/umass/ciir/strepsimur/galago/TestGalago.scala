@@ -2,7 +2,7 @@ package edu.umass.ciir.strepsimur.galago
 
 import scala.collection.JavaConversions._
 import org.lemurproject.galago.core.retrieval.query.Node
-import org.lemurproject.galago.tupleflow.Parameters
+import org.lemurproject.galago.utility.Parameters
 import GalagoQueryBuilder.SeqDep
 
 /**

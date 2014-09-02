@@ -2,7 +2,7 @@ package edu.umass.ciir.strepsimur.galago
 
 import java.io.{File, IOException}
 import org.lemurproject.galago.core.retrieval.query.{AnnotatedNode, StructuredQuery, Node}
-import org.lemurproject.galago.tupleflow.Parameters
+import org.lemurproject.galago.utility.Parameters
 import org.lemurproject.galago.core.parse.Document
 
 import scala.collection.JavaConversions._

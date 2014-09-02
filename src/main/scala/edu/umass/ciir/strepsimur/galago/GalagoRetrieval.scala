@@ -4,7 +4,7 @@ import org.lemurproject.galago.core.retrieval.{ScoredPassage, ScoredDocument}
 import org.lemurproject.galago.core.tokenize.Tokenizer
 
 import org.lemurproject.galago.core.parse.Document
-import org.lemurproject.galago.tupleflow.Parameters
+import org.lemurproject.galago.utility.Parameters
 import scala.collection.JavaConversions._
 
 

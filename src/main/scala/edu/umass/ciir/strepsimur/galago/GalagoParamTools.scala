@@ -1,6 +1,6 @@
 package edu.umass.ciir.strepsimur.galago
 
-import org.lemurproject.galago.tupleflow.Parameters
+import org.lemurproject.galago.utility.Parameters
 import scala.collection.JavaConversions._
 
 /**

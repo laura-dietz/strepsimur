@@ -1,10 +1,12 @@
 package edu.umass.ciir.strepsimur
 
-import org.lemurproject.galago.core.btree.simple.DiskMapReader
-import scala.collection.JavaConversions._
+import java.nio.ByteBuffer
 import java.nio.charset.Charset
-import scala.collection.{JavaConverters, JavaConversions, immutable, mutable}
-import java.nio.{FloatBuffer, ByteBuffer}
+
+import org.lemurproject.galago.core.btree.simple.DiskMapReader
+
+import scala.collection.JavaConversions._
+import scala.collection.{immutable, mutable}
 
 
 /**
@@ -198,7 +200,7 @@ class String2StringDiskBacking(val path:String, val defaultValue:Option[String] 
     try {
       this.apply(key).asInstanceOf[java.lang.String]
     } catch {
-      case ex: NullPointerException => null
+      case ex: NullPointerException => if (defaultValue.isDefined) defaultValue.get else null
     }
   }
 }
@@ -212,7 +214,7 @@ class String2IntDiskBacking(val path:String, val defaultValue:Option[Int] = None
     try {
       this.apply(key).asInstanceOf[java.lang.Integer]
     } catch {
-      case ex: NullPointerException => null
+      case ex: NullPointerException => if (defaultValue.isDefined) defaultValue.get else null
     }
   }
 }

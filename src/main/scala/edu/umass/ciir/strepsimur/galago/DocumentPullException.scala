@@ -1,7 +1,5 @@
 package edu.umass.ciir.strepsimur.galago
 
-import edu.umass.ciir.strepsimur.galago.GalagoParamTools._
-import org.lemurproject.galago.core.parse.Document
 import org.lemurproject.galago.utility.Parameters
 
 /**
@@ -17,3 +15,13 @@ trait DocumentPuller[DocumentType] {
   def pullDocument(documentName: String, params: Parameters = new Parameters()): DocumentType
 
 }
+trait DocumentPullerWithType[KeyType<:String, DocumentType] extends DocumentPuller[DocumentType]{
+  /** @throws edu.umass.ciir.strepsimur.galago.DocumentPullException */
+  def pullDocumentType(documentName: KeyType, params: Parameters = new Parameters()): DocumentType = {
+    pullDocument(documentName, params)
+  }
+
+  def pullDocument(documentName: String, params: Parameters = new Parameters()): DocumentType
+
+}
+

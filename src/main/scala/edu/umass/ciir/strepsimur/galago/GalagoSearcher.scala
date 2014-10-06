@@ -1,17 +1,17 @@
 package edu.umass.ciir.strepsimur.galago
 
 import java.io.{File, IOException}
-import org.lemurproject.galago.core.retrieval.query.{AnnotatedNode, StructuredQuery, Node}
-import org.lemurproject.galago.utility.Parameters
+import java.util.concurrent.TimeUnit
+
+import com.google.common.cache.{CacheBuilder, CacheLoader, LoadingCache}
+import org.lemurproject.galago.core.index.stats.NodeStatistics
 import org.lemurproject.galago.core.parse.Document
+import org.lemurproject.galago.core.parse.Document.DocumentComponents
+import org.lemurproject.galago.core.retrieval._
+import org.lemurproject.galago.core.retrieval.query.{AnnotatedNode, Node, StructuredQuery}
+import org.lemurproject.galago.utility.Parameters
 
 import scala.collection.JavaConversions._
-import org.lemurproject.galago.core.retrieval._
-import org.lemurproject.galago.core.index.stats.NodeStatistics
-import org.lemurproject.galago.core.parse.Document.DocumentComponents
-import com.google.common.cache.{CacheLoader, CacheBuilder, LoadingCache}
-import java.util.concurrent.TimeUnit
-import scala.Some
 
 object GalagoSearcher {
   def apply(p: Parameters): GalagoSearcher = {
@@ -46,7 +46,7 @@ object GalagoSearcher {
 
 class GalagoSearcher(globalParameters: Parameters) extends DocumentPuller[Document] {
 
-  import GalagoParamTools.myParamCopyFrom
+  import edu.umass.ciir.strepsimur.galago.GalagoParamTools.myParamCopyFrom
 
   if (globalParameters.isString("index")) println("** Loading index from: " + globalParameters.getString("index"))
 
@@ -210,7 +210,7 @@ class GalagoSearcher(globalParameters: Parameters) extends DocumentPuller[Docume
                                        debugQuery: ((Node, Node) => Unit) = ((x, y) => {})): Seq[(ScoredDocument,
     AnnotatedNode)] = {
     params.set("annotate", true)
-    for (scoredAnnotatedDoc <- retrieveScoredDocuments(query, Some(params), resultCount, debugQuery)) yield {
+    for (scoredAnnotatedDoc:ScoredDocument <- retrieveScoredDocuments(query, Some(params), resultCount, debugQuery)) yield {
       (scoredAnnotatedDoc, scoredAnnotatedDoc.annotation)
     }
   }

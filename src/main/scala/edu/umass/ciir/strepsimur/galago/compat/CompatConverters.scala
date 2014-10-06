@@ -3,7 +3,7 @@ package edu.umass.ciir.strepsimur.galago.compat
 import edu.umass.ciir.strepsi.galagocompat.GalagoTag
 import org.lemurproject.galago.core.parse.{Document, Tag}
 import scala.collection.JavaConversions._
-import edu.umass.ciir.strepsi.ScoredDocument
+import edu.umass.ciir.strepsi.{ScoredPassage, ScoredDocument}
 
 /**
  * User: dietz
@@ -28,5 +28,11 @@ object CompatConverters {
   }
   def gDocSeq2sDocSeq(gDocSeq:Seq[org.lemurproject.galago.core.retrieval.ScoredDocument]):Seq[ScoredDocument] = {
     for (doc <- gDocSeq) yield CompatConverters.gDoc2sDoc(doc)
+  }
+  def gPsg2sPsg(scoredPsg:org.lemurproject.galago.core.retrieval.ScoredPassage):ScoredPassage = {
+    new ScoredPassage(scoredPsg.documentName, scoredPsg.begin, scoredPsg.end, scoredPsg.rank, scoredPsg.score)
+  }
+  def gPsgSeq2sPsgSeq(gPsgSeq:Seq[org.lemurproject.galago.core.retrieval.ScoredPassage]):Seq[ScoredPassage] = {
+    for (doc <- gPsgSeq) yield CompatConverters.gPsg2sPsg(doc)
   }
 }

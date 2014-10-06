@@ -6,7 +6,7 @@ import java.nio.charset.Charset
 import org.lemurproject.galago.core.btree.simple.DiskMapReader
 
 import scala.collection.JavaConversions._
-import scala.collection.{immutable, mutable}
+import scala.collection.{mutable, immutable}
 
 
 /**
@@ -124,7 +124,7 @@ object DiskBacking {
 
 }
 
-trait DiskBacking[Key,Value]{
+trait DiskBacking[Key,Value] extends Map[Key,Value] {
   val path:String
   val dmr = new DiskMapReader(path)
   def close() {
@@ -135,17 +135,20 @@ trait DiskBacking[Key,Value]{
   def b2key(bytes:Array[Byte]):Key
   def b2value(bytes:Array[Byte]):Value
 
-  def apply(key:Key):Value= {
-    b2value(dmr.get(key2b(key)))
-  }
+//  def apply(key:Key):Value= {
+//    b2value(dmr.get(key2b(key)))
+//  }
   def containsKey(key:Key):Boolean = {
     dmr.containsKey(key2b(key))
   }
 
-  def keySet():Set[Key]={
+  override def keySet:Set[Key]={
     dmr.keySet().map(b2key).toSet
   }
 
+  def entryIterator():Iterator[(Key,Value)]= {
+    dmr.iterator.map(bytePair => b2key(bytePair._1) -> b2value(bytePair._2))
+  }
 
   def defaultValue:Option[Value]
 
@@ -163,6 +166,22 @@ trait DiskBacking[Key,Value]{
         }
       }
   }
+
+
+  override def +[B1 >: Value](kv: (Key, B1)) = throw new UnsupportedOperationException("read only map")
+
+  override def -(key: Key) = throw new UnsupportedOperationException("read only map")
+
+  override def get(key: Key) = {
+    try {
+      Some(b2value(dmr.get(key2b(key))))
+    } catch {
+      case ex: NullPointerException => if (defaultValue.isDefined) Some(defaultValue.get) else None
+    }
+
+  }
+
+  override def iterator = entryIterator()
 
 }
 
@@ -203,6 +222,7 @@ class String2StringDiskBacking(val path:String, val defaultValue:Option[String] 
       case ex: NullPointerException => if (defaultValue.isDefined) defaultValue.get else null
     }
   }
+
 }
 
 class String2IntDiskBacking(val path:String, val defaultValue:Option[Int] = None)

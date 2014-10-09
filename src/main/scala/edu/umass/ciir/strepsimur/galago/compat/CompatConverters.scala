@@ -16,11 +16,12 @@ object CompatConverters {
   }
 
   def doc2Tag(document:Document):Seq[GalagoTag] = {
-    document.tags.map(strepsiTagToGalagoTag(_, document.name))
+    if(document.tags == null) Seq.empty
+    else document.tags.map(strepsiTagToGalagoTag(_, document.name))
   }
 
   def doc2TermTag(document:Document):(Seq[String],Seq[GalagoTag]) = {
-    (document.terms, document.tags.map(strepsiTagToGalagoTag(_, document.name)))
+    (document.terms, doc2Tag(document))
   }
 
   def gDoc2sDoc(scoredDocument:org.lemurproject.galago.core.retrieval.ScoredDocument):ScoredDocument = {

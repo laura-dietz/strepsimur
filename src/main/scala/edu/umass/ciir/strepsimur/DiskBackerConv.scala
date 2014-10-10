@@ -152,6 +152,9 @@ trait DiskBacking[Key,Value] extends Map[Key,Value] {
 
   def defaultValue:Option[Value]
 
+
+  override def default(key: Key) = defaultValue.getOrElse(super.default(key))
+
   def getOrDefault(key:Key):Value = {
     try {
         this.apply(key)

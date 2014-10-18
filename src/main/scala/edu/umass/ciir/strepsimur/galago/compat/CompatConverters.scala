@@ -27,6 +27,9 @@ object CompatConverters {
   def gDoc2sDoc(scoredDocument:org.lemurproject.galago.core.retrieval.ScoredDocument):ScoredDocument = {
     new ScoredDocument(scoredDocument.documentName, scoredDocument.rank, scoredDocument.score)
   }
+  def sDoc2gDoc(scoredDocument:ScoredDocument):org.lemurproject.galago.core.retrieval.ScoredDocument = {
+    new org.lemurproject.galago.core.retrieval.ScoredDocument(scoredDocument.documentName, scoredDocument.rank, scoredDocument.score)
+  }
   def gDocSeq2sDocSeq(gDocSeq:Seq[org.lemurproject.galago.core.retrieval.ScoredDocument]):Seq[ScoredDocument] = {
     for (doc <- gDocSeq) yield CompatConverters.gDoc2sDoc(doc)
   }

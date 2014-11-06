@@ -9,7 +9,7 @@
         <lemur.version>3.7-SNAPSHOT</lemur.version>
         <javaVersion>1.6</javaVersion>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <strepsi.version>1.4-SNAPSHOT</strepsi.version>
+        <strepsi.version>1.4</strepsi.version>
     </properties>
     <version>s${scala.version}-g${lemur.version}-${strepsi.version}</version>
     <inceptionYear>2013</inceptionYear>
